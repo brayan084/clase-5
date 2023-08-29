@@ -9,7 +9,7 @@ const router = Router();
 
 router.get("/",[
     validarJWT,
-    validar_rol()
+    validar_rol("ROLE_USUARIOS")
 ], getUsuarios)
 router.post("/",[
     check('nombre', 'El nombre es obligatorio').not().isEmpty(),
