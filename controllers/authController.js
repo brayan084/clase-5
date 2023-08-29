@@ -7,12 +7,11 @@ const login = async (req, res) => {
     const { email, password } = req.body;
     try {
         const usuarioDB = await Usuario.findOne({ where: { email } });
-        // const rol = usuarioDB.dataValues.rol 
        
         if (usuarioDB) {
             const validPassword = bcryptjs.compareSync(password, usuarioDB.password);
             if (validPassword) {
-                const token = await generarJWT(usuarioDB.id, usuarioDB.nombre, usuarioDB.rol);
+                const token = await generarJWT(usuarioDB.id, usuarioDB.nombre, usuarioDB.Roleid);
                 res.json({
                     ok: true,
                     token,
@@ -34,7 +33,7 @@ const login = async (req, res) => {
         console.log(error);
         return res.status(500).json({
             ok: false,
-            msg: "email invalido"
+            msg: "email invalido",
         })
     }
 

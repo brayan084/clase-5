@@ -3,13 +3,13 @@ const { getUsuarios, createUsuario, updateUsuario } = require('../controllers/us
 const { check } = require('express-validator');
 const { validarCampos } = require('../middlewares/validar_campos');
 const { validarJWT } = require('../middlewares/validar_jwt');
-const { validar_rol } = require('../middlewares/validar_access');
+const { validar_rol } = require('../middlewares/validar_role');
 
 const router = Router();
 
 router.get("/",[
-    // validarJWT,
-    // validar_rol('ROLE_USUARIOS'),
+    validarJWT,
+    validar_rol()
 ], getUsuarios)
 router.post("/",[
     check('nombre', 'El nombre es obligatorio').not().isEmpty(),

@@ -3,13 +3,11 @@ const bcryptjs = require('bcryptjs')
 const { generarJWT } = require('../helpers/generadorJWT')
 
 const Usuario = require('../model/Usuario')
-const Role = require('../model/Usuario')
 
 const getUsuarios = async (req, res = response) => {
     
     const usuarios = await Usuario.findAll()
-    const roles = await Role.findAll()
-    console.log(roles)
+
 
     res.json({
         ok: true,
@@ -26,7 +24,7 @@ const createUsuario = async (req, res = response) => {
     usuario.password = bcryptjs.hashSync(req.body.password, salt)
     
     await usuario.save()
-    const token = await generarJWT(usuario.id, usuario.nombre, usuario.rol)
+    const token = await generarJWT(usuario.id, usuario.role)
 
     res.json({token, usuario})
 
