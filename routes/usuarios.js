@@ -8,8 +8,8 @@ const { validar_rol } = require('../middlewares/validar_access');
 const router = Router();
 
 router.get("/",[
-    validarJWT,
-    validar_rol('ROLE_USUARIOS'),
+    // validarJWT,
+    // validar_rol('ROLE_USUARIOS'),
 ], getUsuarios)
 router.post("/",[
     check('nombre', 'El nombre es obligatorio').not().isEmpty(),

@@ -19,20 +19,22 @@ const Usuario = dbConnetion.define('Usuario', {
     password: {
         type: DataTypes.STRING,
         required: true
-    },
-    rol: {
-        type: DataTypes.STRING,
-        defaultValue: "role user",
-        required: true
-
     }
+    // Roleid: {
+    //     type: DataTypes.INTEGER,
+    //     foreneignKey: true,
+    //     required: true
+    // }
 
 })
+
+
 
 Usuario.sync({alter : true}).then(() => {
-    console.log("Table sync successfully");
+    console.log("Table Usuario sync successfully");
 }).catch((error) => {
-    console.log(error);
+    console.log("hubo un error");
 })
+
 
 module.exports = Usuario
