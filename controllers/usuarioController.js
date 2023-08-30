@@ -1,60 +1,93 @@
-const {response} = require('express')
-const bcryptjs = require('bcryptjs')
-const { generarJWT } = require('../helpers/generadorJWT')
+const { response } = require('express');
+const bcrypt = require('bcryptjs');
 
-const Usuario = require('../model/Usuario')
+const Usuario = require('../model/Usuario');
 
-const getUsuarios = async (req, res = response) => {
-    
+const { generarJWT } = require('../helpers/generadorJWT');
+
+
+const getUsuarios = async (req, res = response) => { 
+
+    console.log(req.id)
     const usuarios = await Usuario.findAll()
 
-    res.json({
-        usuarios,
-    })
+    res.json(usuarios)
+
 }
 
+
 const createUsuario = async (req, res = response) => {
-    
+
+    // if (!req.body.password) {
+    //     return res.status(500).json({ 
+    //         ok: false,
+    //         msg: "El password es obligatorio"
+    //     })
+    // }
+
+    // if (!req.body.nombre) {
+    //     return res.status(500).json({ 
+    //         ok: false,
+    //         msg: "El nombre es obligatorio"
+    //     })
+    // }
+
+    // if (!req.body.email) {
+    //     return res.status(500).json({ 
+    //         ok: false,
+    //         msg: "El email es obligatorio"
+    //     })
+    // }
 
     const usuario = new Usuario(req.body)
 
-    const salt = bcryptjs.genSaltSync()
-    usuario.password = bcryptjs.hashSync(req.body.password, salt)
-    
-    await usuario.save()
-    const token = await generarJWT(usuario.id, usuario.nombre, usuario.rol)
+    const salt = bcrypt.genSaltSync()
+    usuario.password = bcrypt.hashSync(usuario.password, salt)
 
-    res.json({token, usuario})
+    const u = await usuario.save()
 
-}
 
-const updateUsuario = async (req, res = response) => {
-    
-    const id = req.body.id
+
+    const token = await generarJWT(u.id, u.nombre)
+
+
+    res.json({token,
+        usuario})
+
+ }
+
+ const updateUsuario = async (req, res = response) => { 
+
+    const id = req.params.id
 
     try {
-        const usuarioDB = await Usuario.findById(id)
 
-        if(!usuarioDB){
+        const usuarioDB = await Usuario.findByPk(id)
+
+        if (!usuarioDB) {
             return res.status(201).json({
                 ok: false,
-                message: "No existe el usuario con ese id",
+                msg: 'No existe un usuario con ese id'
             })
         }
 
-        const {password, nombre, rol} = req.body
+        const { password, nombre, img, role } = req.body
 
-        if (password){
-            const salt = bcryptjs.genSaltSync()
-            req.body.password = bcryptjs.hashSync(password, salt)
+        if (password) {
+            const salt = bcrypt.genSaltSync()
+            usuarioDB.password = bcrypt.hashSync(usuario.password, salt)
         }
 
-        if (nombre){
-            req.body.nombre = nombre
+        if (nombre) {
+            usuarioDB.nombre = nombre
         }
 
-        if (rol){
-            req.body.rol = rol
+        if (img) {
+            usuarioDB.img = img
+        }   
+
+        if (role)  {
+            usuarioDB.role = role
         }
 
         await usuarioDB.save()
@@ -62,17 +95,18 @@ const updateUsuario = async (req, res = response) => {
         res.json(usuarioDB)
 
     } catch (error) {
-        console.error(error)
-        res.status(500).json({
+        console.log(error)
+
+        res.status(500).json({ 
             ok: false,
-            message: "Error inesperado"
+            msg: "Error interno"
         })
     }
 
-}
+ }
 
-module.exports = {
-    createUsuario,
+ module.exports = {
     getUsuarios,
+    createUsuario,
     updateUsuario
-}
+ }
