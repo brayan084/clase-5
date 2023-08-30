@@ -1,9 +1,9 @@
 const { Sequelize } = require('sequelize');
 
-const dbConnetion = new Sequelize('clase-5', 'root', 'Dragones05@', 
+const dbConnection = new Sequelize('clase-5', 'root', 'Dragones05@',
 {
     host: 'localhost',
-    dialect: 'mysql',
+    dialect: 'mysql'
 })
 
-module.exports = {dbConnetion} 
+module.exports = {dbConnection};
