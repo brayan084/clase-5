@@ -19,11 +19,6 @@ const Usuario = dbConnetion.define('Usuario', {
     password: {
         type: DataTypes.STRING,
         required: true
-    },
-    Roleid: {
-        type: DataTypes.INTEGER,
-        foreneignKey: true,
-        required: true
     }
 
 })
