@@ -33,7 +33,7 @@ const Usuario = dbConnetion.define('Usuario', {
 Usuario.sync({alter : true}).then(() => {
     console.log("Table Usuario sync successfully");
 }).catch((error) => {
-    console.log("hubo un error");
+    console.log("hubo un error", error);
 })
 
 
