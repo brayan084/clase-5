@@ -5,6 +5,7 @@ function validar_rol(Acceso) {
     return (req, res, next) => {
 
         const token = req.header('Authorization').replace('Bearer ', '');
+        console.log(token)
         if (!token) {
             return res.status(401).json({ message: 'Token no proporcionado' });
         }
@@ -24,6 +25,7 @@ function validar_rol(Acceso) {
                     console.log(datos + ' query ')
                     console.log(Acceso + ' Acceso')
                     if (datos !== Acceso) {
+                        // console.log("no tiene acceso por el rol")
                         return res.status(403).json({ message: 'Acceso no autorizado' });
                     } else {
                         next();
