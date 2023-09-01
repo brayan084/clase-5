@@ -11,18 +11,11 @@ const Role = dbConnetion.define('Role', {
     type_role: {
         type: DataTypes.STRING,
         required: true
-    },
-    createdAt: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: DataTypes.NOW
-    },
-    updatedAt: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: DataTypes.NOW
     }
+}, {
+    timestamps: false
 })
+
 
 Role.sync({alter : true}).then(() => {
     console.log("Table Role sync successfully");

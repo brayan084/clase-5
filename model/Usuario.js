@@ -22,18 +22,20 @@ const Usuario = dbConnetion.define('Usuario', {
     },
     Roleid: {
         type: DataTypes.INTEGER,
-        foreneignKey: true,
         required: true
     }
 
+},{
+    timestamps: false
 })
+
 
 
 
 Usuario.sync({alter : true}).then(() => {
     console.log("Table Usuario sync successfully");
 }).catch((error) => {
-    console.log("hubo un error", error);
+    console.log("hubo un error");
 })
 
 
