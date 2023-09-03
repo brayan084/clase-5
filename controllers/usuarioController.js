@@ -1,12 +1,37 @@
-const {response} = require('express')
+const { response } = require('express')
 const bcryptjs = require('bcryptjs')
 const { generarJWT } = require('../helpers/generadorJWT')
 
 const Usuario = require('../model/Usuario')
+const { Role } = require('../model/role')
 
+const getUsuario = async (req, res = response) => {
+
+    const id = req.params.id
+    const usuario = await Usuario.findOne({
+        where: { id },
+        attributes: ['id', 'nombre', 'email'],
+        include: [{
+            model: Role,
+            attributes: ['id', 'role']
+        }]
+    })
+
+
+    res.json({
+        ok: true,
+        usuario
+    })
+}
 const getUsuarios = async (req, res = response) => {
-    
-    const usuarios = await Usuario.findAll()
+
+    const usuarios = await Usuario.findAll({
+        attributes: ['id', 'nombre', 'email'],
+        include: [{
+            model: Role,
+            attributes: ['id', 'role']
+        }]
+    })
 
 
     res.json({
@@ -16,46 +41,46 @@ const getUsuarios = async (req, res = response) => {
 }
 
 const createUsuario = async (req, res = response) => {
-    
+
 
     const usuario = new Usuario(req.body)
 
     const salt = bcryptjs.genSaltSync()
     usuario.password = bcryptjs.hashSync(req.body.password, salt)
-    
+
     await usuario.save()
     const token = await generarJWT(usuario.id, usuario.role)
 
-    res.json({token, usuario})
+    res.json({ token, usuario })
 
 }
 
 const updateUsuario = async (req, res = response) => {
-    
+
     const id = req.body.id
 
     try {
         const usuarioDB = await Usuario.findById(id)
 
-        if(!usuarioDB){
+        if (!usuarioDB) {
             return res.status(201).json({
                 ok: false,
                 message: "No existe el usuario con ese id",
             })
         }
 
-        const {password, nombre, rol} = req.body
+        const { password, nombre, rol } = req.body
 
-        if (password){
+        if (password) {
             const salt = bcryptjs.genSaltSync()
             req.body.password = bcryptjs.hashSync(password, salt)
         }
 
-        if (nombre){
+        if (nombre) {
             req.body.nombre = nombre
         }
 
-        if (rol){
+        if (rol) {
             req.body.rol = rol
         }
 
@@ -76,5 +101,6 @@ const updateUsuario = async (req, res = response) => {
 module.exports = {
     createUsuario,
     getUsuarios,
-    updateUsuario
+    updateUsuario,
+    getUsuario
 }
