@@ -11,7 +11,7 @@ const login = async (req, res) => {
         if (usuarioDB) {
             const validPassword = bcryptjs.compareSync(password, usuarioDB.password);
             if (validPassword) {
-                const token = await generarJWT(usuarioDB.id, usuarioDB.nombre, usuarioDB.Roleid);
+                const token = await generarJWT(usuarioDB.id, usuarioDB.nombre);
                 res.json({
                     ok: true,
                     token,
